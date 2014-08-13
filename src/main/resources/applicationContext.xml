@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--与数据库连接和表的映射有关的配置-->
+    <bean id="placeholderConfig" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:db.properties</value>
+                <value>classpath:queueConfig.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${driver}"/>
+        <property name="jdbcUrl" value="${url}"/>
+        <property name="user" value="${username}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.Oracle9iDialect</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.max_fetch_depth">3</prop>
+                <prop key="hibernate.connection.isolation">2</prop>
+                <!--<prop key="hibernate.cache.use_second_level_cache">true</prop>-->
+                <!--<prop key="hibernate.cache.use_query_cache">true</prop>-->
+                <prop key="hibernate.connection.SetBigStringTryClob">true</prop>
+            </props>
+        </property>
+        <property name="mappingResources">
+            <list>
+                <value>hibernate.hbm.xml</value>
+            </list>
+        </property>
+    </bean>
+
+    <!--***********************后台定时任务有关的配置********************-->
+    <!--阻塞队列-->
+    <bean id="blockingQueue" class="szregplat.dbcore.cache.BlockingQueue" lazy-init="true">
+        <constructor-arg name="capacity" value="${queue.capacity}"></constructor-arg>
+    </bean>
+    <!--操作数据库的任务.注入阻塞队列-->
+    <bean id="executeThread" class="szregplat.dbcore.cache.ExecuteThread" depends-on="blockingQueue">
+        <property name="sessionFactory" ref="sessionFactory"></property>
+        <property name="blockingQueue" ref="blockingQueue"></property>
+    </bean>
+    <!--向队尾添加QueueEntry-->
+    <bean id="dbCore" class="szregplat.dbcore.cache.DBCore" depends-on="blockingQueue">
+        <property name="blockingQueue" ref="blockingQueue"></property>
+    </bean>
+    <!-- 指定定时任务，执行定时任务的类和执行的方法体 -->
+    <bean id="jobtask" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject">
+            <ref bean="executeThread"></ref>
+        </property>
+        <property name="targetMethod">
+            <value>run</value>
+        </property>
+        <property name="concurrent" value="false"></property>
+    </bean>
+
+    <!--定时任务触发时间设置-->
+    <bean id="doTime" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+        <property name="jobDetail">
+            <ref bean="jobtask"></ref>
+        </property>
+        <!--指定（毫秒）间隔执行一次-->
+        <property name="repeatInterval" value="${queue.repeatInterval}"></property>
+        <!--值为-1，表示重复无数次-->
+        <property name="repeatCount" value="-1"></property>
+        <!--指定1秒执行一次-->
+        <!--<property name="cronExpression" value="*/1 * * * * ?"></property>-->
+    </bean>
+
+    <!--总管理类-->
+    <bean id="startJob" lazy-init="false" autowire="no" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="doTime"></ref>
+            </list>
+        </property>
+    </bean>
+
+</beans>

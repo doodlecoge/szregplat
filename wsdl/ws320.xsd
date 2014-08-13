@@ -1,0 +1,823 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            targetNamespace="http://service.hch.me"
+            xmlns:tns="http://service.hch.me"
+            elementFormDefault="qualified">
+    <xsd:element name="GetHospInfoReq">
+        <xsd:annotation>
+            <xsd:documentation>获取医院信息请求</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:AuthInfo"/>
+                <xsd:element name="Filter">
+                    <xsd:annotation>
+                        <xsd:documentation>过滤信息</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="OperType">
+                                <xsd:annotation>
+                                    <xsd:documentation>操作类型</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="GetHospBasic"/>
+                                        <xsd:enumeration value="GetHospDepartBasic"/>
+                                        <xsd:enumeration value="GetHospDocBasic"/>
+                                        <xsd:enumeration value="GetScheduleList"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element ref="tns:HospName" minOccurs="0"/>
+                            <xsd:element ref="tns:DepartName" minOccurs="0"/>
+                            <xsd:element ref="tns:DoctorName" minOccurs="0"/>
+                            <xsd:element name="BeginDate" type="xsd:date" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>排班起始日期（如 2012-12-20）</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="EndDate" type="xsd:date" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetHospInfoRsp">
+        <xsd:annotation>
+            <xsd:documentation>获取医院信息响应</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:Result"/>
+                <xsd:element ref="tns:Hospital" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetRegInfoReq">
+        <xsd:annotation>
+            <xsd:documentation>查询预约信息请求</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:AuthInfo"/>
+                <xsd:element name="PatientIdentify">
+                    <xsd:annotation>
+                        <xsd:documentation>患者识别信息</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:choice>
+                            <xsd:element ref="tns:SN" minOccurs="0"/>
+                            <xsd:element ref="tns:IdCard"/>
+                            <xsd:element name="Other" minOccurs="0">
+                                <xsd:complexType>
+                                    <xsd:sequence>
+                                        <xsd:element ref="tns:Name" minOccurs="0"/>
+                                        <xsd:element ref="tns:Phone" minOccurs="0"/>
+                                    </xsd:sequence>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:choice>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="Filter" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="BeginDate" type="xsd:date">
+                                <xsd:annotation>
+                                    <xsd:documentation>就诊起始日期（如 2012-12-20）</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="EndDate" type="xsd:date">
+                                <xsd:annotation>
+                                    <xsd:documentation>就诊结束日期</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element ref="tns:HospName" minOccurs="0"/>
+                            <xsd:element ref="tns:DepartName" minOccurs="0"/>
+                            <xsd:element ref="tns:DoctorName" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetRegInfoRsp">
+        <xsd:annotation>
+            <xsd:documentation>查询预约信息响应</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:Result"/>
+                <xsd:element name="Patient" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="tns:IdCard"/>
+                            <xsd:element ref="tns:Name"/>
+                            <xsd:element ref="tns:Phone"/>
+                            <xsd:element name="Sex">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="男"/>
+                                        <xsd:enumeration value="女"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Birth" type="xsd:date"/>
+                            <xsd:element name="InsureType">
+                                <xsd:annotation>
+                                    <xsd:documentation>医保类型</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="自费"/>
+                                        <xsd:enumeration value="市民卡"/>
+                                        <xsd:enumeration value="园区医保"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="IsBlocked" type="xsd:boolean">
+                                <xsd:annotation>
+                                    <xsd:documentation>是否黑名单</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element ref="tns:PayAccount" minOccurs="0" maxOccurs="unbounded"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="RegInfo" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="tns:HospName"/>
+                            <xsd:element ref="tns:SN"/>
+                            <xsd:element ref="tns:DepartName"/>
+                            <xsd:element ref="tns:DoctorName" minOccurs="0"/>
+                            <xsd:element name="SelfPay" type="xsd:decimal">
+                                <xsd:annotation>
+                                    <xsd:documentation>自费费用</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="InsurePay" type="xsd:decimal">
+                                <xsd:annotation>
+                                    <xsd:documentation>医保费用</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="RegDateTime" type="xsd:dateTime">
+                                <xsd:annotation>
+                                    <xsd:documentation>预约时间</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="ClinicDateTime" type="xsd:dateTime">
+                                <xsd:annotation>
+                                    <xsd:documentation>就诊时间（开始值）</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="IsFetched" type="xsd:boolean">
+                                <xsd:annotation>
+                                    <xsd:documentation>是否已经取号</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="FetchDateTime" type="xsd:dateTime" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>取号时间</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="IsUnPayed" type="xsd:boolean">
+                                <xsd:annotation>
+                                    <xsd:documentation>是否未付费</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="UnpayedFee" type="xsd:decimal" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>未付费费用</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="IsQuit" type="xsd:boolean">
+                                <xsd:annotation>
+                                    <xsd:documentation>是否退号</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="QuitTime" type="xsd:dateTime" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>退号时间</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element ref="tns:RegFrom"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetRegPoolReq">
+        <xsd:annotation>
+            <xsd:documentation>查询号源信息请求</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:AuthInfo"/>
+                <xsd:element name="Filter">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="tns:HospName"/>
+                            <xsd:element ref="tns:DepartName"/>
+                            <xsd:element ref="tns:DoctorName" minOccurs="0"/>
+                            <xsd:element ref="tns:WorkDate"/>
+                            <xsd:element ref="tns:WorkType"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="GetRegPoolRsp">
+        <xsd:annotation>
+            <xsd:documentation>查询号源信息响应</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:Result"/>
+                <xsd:element name="PoolInfo" minOccurs="0" maxOccurs="unbounded">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="tns:StartTime"/>
+                            <xsd:element ref="tns:EndTime" minOccurs="0"/>
+                            <xsd:element name="TotalNum" type="xsd:unsignedInt" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>本时段号源总数（当本时段仅有1个号时，本字段可省略）</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="LeftNum" type="xsd:unsignedInt">
+                                <xsd:annotation>
+                                    <xsd:documentation>本时段剩余号源数</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="NotifyHospInfoReq">
+        <xsd:annotation>
+            <xsd:documentation>通知医院信息变更请求</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:Hospital"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="NotifyHospInfoRsp">
+        <xsd:annotation>
+            <xsd:documentation>通知医院信息变更响应</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:Result"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="RegisterReq">
+        <xsd:annotation>
+            <xsd:documentation>预约/退号/修改预约请求</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:AuthInfo"/>
+                <xsd:element name="OperType">
+                    <xsd:annotation>
+                        <xsd:documentation>操作类型</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="AddReg"/>
+                            <xsd:enumeration value="DelReg"/>
+                            <xsd:enumeration value="ModReg"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element ref="tns:SN" minOccurs="0"/>
+                <xsd:element name="PatientInfo">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="tns:IdCard"/>
+                            <xsd:element ref="tns:Name"/>
+                            <xsd:element ref="tns:Phone" minOccurs="0"/>
+                            <xsd:element name="Sex" minOccurs="0">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="男"/>
+                                        <xsd:enumeration value="女"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Birth" type="xsd:date" minOccurs="0"/>
+                            <xsd:element name="InsureType">
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="自费"/>
+                                        <xsd:enumeration value="市民卡"/>
+                                        <xsd:enumeration value="园区医保"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element ref="tns:PayAccount" minOccurs="0"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="RegInfo" minOccurs="0">
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element ref="tns:HospName"/>
+                            <xsd:element ref="tns:DepartName"/>
+                            <xsd:element ref="tns:DoctorName" minOccurs="0"/>
+                            <xsd:element ref="tns:WorkDate"/>
+                            <xsd:element ref="tns:WorkType"/>
+                            <xsd:element ref="tns:StartTime"/>
+                            <xsd:element ref="tns:EndTime">
+                                <xsd:annotation>
+                                    <xsd:documentation>号源结束时间</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="IsPayed" type="xsd:boolean" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>是否已付费</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="RegOperType" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>预约类型</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:complexType>
+                                    <xsd:choice>
+                                        <xsd:element name="RadCheckType">
+                                            <xsd:annotation>
+                                                <xsd:documentation>放射检查类型</xsd:documentation>
+                                            </xsd:annotation>
+                                            <xsd:simpleType>
+                                                <xsd:restriction base="xsd:string">
+                                                    <xsd:enumeration value="CT"/>
+                                                    <xsd:enumeration value="MRI"/>
+                                                    <xsd:enumeration value="CR"/>
+                                                    <xsd:enumeration value="DR"/>
+                                                    <xsd:enumeration value="DSA"/>
+                                                </xsd:restriction>
+                                            </xsd:simpleType>
+                                        </xsd:element>
+                                        <xsd:element name="BodyCheckSet">
+                                            <xsd:annotation>
+                                                <xsd:documentation>体检套餐类型</xsd:documentation>
+                                            </xsd:annotation>
+                                            <xsd:simpleType>
+                                                <xsd:restriction base="xsd:string">
+                                                    <xsd:maxLength value="50"/>
+                                                </xsd:restriction>
+                                            </xsd:simpleType>
+                                        </xsd:element>
+                                    </xsd:choice>
+                                </xsd:complexType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element ref="tns:RegFrom"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="RegisterRsp">
+        <xsd:annotation>
+            <xsd:documentation>预约响应</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:Result"/>
+                <xsd:element ref="tns:SN" minOccurs="0"/>
+                <xsd:element name="ClinicSerialNo" type="xsd:unsignedInt" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>就诊序号</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+
+    <!--**********************************************-->
+
+    <xsd:element name="AuthInfo">
+        <xsd:annotation>
+            <xsd:documentation>授权信息</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="UserName">
+                    <xsd:annotation>
+                        <xsd:documentation>用户名</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:maxLength value="16"/>
+                            <xsd:minLength value="3"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="Password">
+                    <xsd:annotation>
+                        <xsd:documentation>密码</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:minLength value="3"/>
+                            <xsd:maxLength value="16"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Result">
+        <xsd:annotation>
+            <xsd:documentation>返回结果</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="ResultCode" type="xsd:unsignedLong"/>
+                <xsd:element name="ResultMsg" type="xsd:string" minOccurs="0"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="DepartName">
+        <xsd:annotation>
+            <xsd:documentation>科室名称</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="50"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="HospName">
+        <xsd:annotation>
+            <xsd:documentation>医院名称</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="50"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="DoctorName">
+        <xsd:annotation>
+            <xsd:documentation>医生姓名</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="RegistryFee" type="xsd:decimal">
+        <xsd:annotation>
+            <xsd:documentation>挂号费</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="ClinicFee" type="xsd:decimal">
+        <xsd:annotation>
+            <xsd:documentation>门诊费</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="Hospital">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:HospName"/>
+                <xsd:element name="HospBasic" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>医院基本数据</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="Grade" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>医院等级</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Kind" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>医院性质</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Address" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>地址</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="200"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Phone" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>电话</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="50"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="Intro" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>医院简介</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string"/>
+                                </xsd:simpleType>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element ref="tns:Depart" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Depart">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:DepartName"/>
+                <xsd:element name="DepartBasic" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>科室基本信息</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="DepartType">
+                                <xsd:annotation>
+                                    <xsd:documentation>科室类别</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="普通"/>
+                                        <xsd:enumeration value="专家"/>
+                                        <xsd:enumeration value="普通和专家"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="DepartIntro" type="xsd:string" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>科室简介</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element name="Limited" type="xsd:unsignedInt" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>放号限额</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element ref="tns:RegistryFee"/>
+                            <xsd:element ref="tns:ClinicFee"/>
+                            <xsd:element name="DepartSex" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>科室性别限制</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="0"/>
+                                        <xsd:enumeration value="M"/>
+                                        <xsd:enumeration value="F"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="ChildAge" type="xsd:unsignedByte" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>儿科年龄限制</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element ref="tns:Schedule" minOccurs="0" maxOccurs="unbounded"/>
+                <xsd:element ref="tns:Doctor" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Doctor">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:DoctorName"/>
+                <xsd:element name="DocBasic" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>医生基本信息</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:complexType>
+                        <xsd:sequence>
+                            <xsd:element name="DocSex">
+                                <xsd:annotation>
+                                    <xsd:documentation>医生性别(0男 1女)</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:enumeration value="男"/>
+                                        <xsd:enumeration value="女"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="DocRank" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>医生职称</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="20"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="DoctorInro" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>医生简介</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="200"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="DocMajor" minOccurs="0">
+                                <xsd:annotation>
+                                    <xsd:documentation>医生特长</xsd:documentation>
+                                </xsd:annotation>
+                                <xsd:simpleType>
+                                    <xsd:restriction base="xsd:string">
+                                        <xsd:maxLength value="100"/>
+                                    </xsd:restriction>
+                                </xsd:simpleType>
+                            </xsd:element>
+                            <xsd:element name="IsExpert" type="xsd:boolean">
+                                <xsd:annotation>
+                                    <xsd:documentation>是否专家</xsd:documentation>
+                                </xsd:annotation>
+                            </xsd:element>
+                            <xsd:element ref="tns:RegistryFee"/>
+                            <xsd:element ref="tns:ClinicFee"/>
+                        </xsd:sequence>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element ref="tns:Schedule" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="Schedule">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:WorkDate"/>
+                <xsd:element ref="tns:WorkType"/>
+                <xsd:element name="WorkStatus">
+                    <xsd:annotation>
+                        <xsd:documentation>排班状态</xsd:documentation>
+                    </xsd:annotation>
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="正常"/>
+                            <xsd:enumeration value="停诊"/>
+                            <xsd:enumeration value="停诊但保留预约"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="ExpertFee" type="xsd:decimal" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>专家费</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="SN" type="xsd:string">
+        <xsd:annotation>
+            <xsd:documentation>挂号流水号</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="WorkDate" type="xsd:date">
+        <xsd:annotation>
+            <xsd:documentation>排班日期</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="WorkType">
+        <xsd:annotation>
+            <xsd:documentation>值班类别</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="上午"/>
+                <xsd:enumeration value="下午"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="IdCard">
+        <xsd:annotation>
+            <xsd:documentation>身份证号码</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="18"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Name">
+        <xsd:annotation>
+            <xsd:documentation>姓名</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="Phone">
+        <xsd:annotation>
+            <xsd:documentation>联系电话</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:maxLength value="20"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="StartTime" type="xsd:time">
+        <xsd:annotation>
+            <xsd:documentation>号源开始时间</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="EndTime" type="xsd:time">
+        <xsd:annotation>
+            <xsd:documentation>号源结束时间，当下一个时段开始时间就是本时段结束时间时，可省略本字段</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="RegVia">
+        <xsd:annotation>
+            <xsd:documentation>预约途径</xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="网站：12320"/>
+                <xsd:enumeration value="网站：挂号网"/>
+                <xsd:enumeration value="网站：智慧医疗"/>
+                <xsd:enumeration value="手机：APP"/>
+                <xsd:enumeration value="手机：WAP"/>
+                <xsd:enumeration value="电话"/>
+                <xsd:enumeration value="诊间预约"/>
+                <xsd:enumeration value="转诊预约"/>
+                <xsd:enumeration value="自助机预约"/>
+                <xsd:enumeration value="电视"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:element>
+    <xsd:element name="RegFrom">
+        <xsd:annotation>
+            <xsd:documentation>预约来源</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element ref="tns:RegVia"/>
+                <xsd:element name="Vendor" type="xsd:string" minOccurs="0">
+                    <xsd:annotation>
+                        <xsd:documentation>预约前端服务提供商标识</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="Operator" type="xsd:string">
+                    <xsd:annotation>
+                        <xsd:documentation>操作员标识</xsd:documentation>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+    <xsd:element name="PayAccount">
+        <xsd:annotation>
+            <xsd:documentation>支付账号</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="AccountType">
+                    <xsd:simpleType>
+                        <xsd:restriction base="xsd:string">
+                            <xsd:enumeration value="支付宝"/>
+                            <xsd:enumeration value="预充值账户"/>
+                            <xsd:enumeration value="微信"/>
+                            <xsd:enumeration value="银联"/>
+                        </xsd:restriction>
+                    </xsd:simpleType>
+                </xsd:element>
+                <xsd:element name="AccountNo" type="xsd:string"/>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

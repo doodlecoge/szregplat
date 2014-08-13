@@ -1,0 +1,866 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by MESMERiZE (MiZE) -->
+<wsdl:description targetNamespace="http://new.webservice.namespace"
+                  xmlns:wsdl="http://www.w3.org/ns/wsdl"
+                  xmlns:wsoap="http://www.w3.org/ns/wsdl/soap"
+                  xmlns:whttp="http://www.w3.org/ns/wsdl/http"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns="http://new.webservice.namespace">
+    <wsdl:types>
+        <xs:schema
+                xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/"
+                targetNamespace="http://new.webservice.namespace"
+                elementFormDefault="qualified">
+            <xs:element name="GetHospInfoReq">
+                <xs:annotation>
+                    <xs:documentation>获取医院信息请求</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:AuthInfo"/>
+                        <xs:element name="Filter">
+                            <xs:annotation>
+                                <xs:documentation>过滤信息</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="OperType">
+                                        <xs:annotation>
+                                            <xs:documentation>操作类型</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="GetHospBasic"/>
+                                                <xs:enumeration value="GetHospDepartBasic"/>
+                                                <xs:enumeration value="GetHospDocBasic"/>
+                                                <xs:enumeration value="GetSchedualList"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element ref="tns:HospName" minOccurs="0"/>
+                                    <xs:element ref="tns:DepartName" minOccurs="0"/>
+                                    <xs:element ref="tns:DoctorName" minOccurs="0"/>
+                                    <xs:element name="BeginDate" type="xs:date" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>排班起始日期（如 2012-12-20）</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="EndDate" type="xs:date" minOccurs="0"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetHospInfoRsp">
+                <xs:annotation>
+                    <xs:documentation>获取医院信息响应</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:Result"/>
+                        <xs:element ref="tns:Hospital" minOccurs="0" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="AuthInfo">
+                <xs:annotation>
+                    <xs:documentation>授权信息</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="UserName">
+                            <xs:annotation>
+                                <xs:documentation>用户名</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:maxLength value="16"/>
+                                    <xs:minLength value="3"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="Password">
+                            <xs:annotation>
+                                <xs:documentation>密码</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:minLength value="3"/>
+                                    <xs:maxLength value="16"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Result">
+                <xs:annotation>
+                    <xs:documentation>返回结果</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="ResultCode" type="xs:unsignedLong"/>
+                        <xs:element name="ResultMsg" type="xs:string" minOccurs="0"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="DepartName">
+                <xs:annotation>
+                    <xs:documentation>科室名称</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="HospName">
+                <xs:annotation>
+                    <xs:documentation>医院名称</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="50"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="DoctorName">
+                <xs:annotation>
+                    <xs:documentation>医生姓名</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="RegistryFee" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>挂号费</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ClinicFee" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation>门诊费</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="NotifyHospInfoReq">
+                <xs:annotation>
+                    <xs:documentation>通知医院信息变更请求</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:Hospital"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="NotifyHospInfoRsp">
+                <xs:annotation>
+                    <xs:documentation>通知医院信息变更响应</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:Result"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Hospital">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:HospName"/>
+                        <xs:element name="HospBasic" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>医院基本数据</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="Grade" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>医院等级</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="50"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="Kind" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>医院性质</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="50"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="Address" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>地址</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="200"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="Phone" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>电话</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:maxLength value="50"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="Intro" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>医院简介</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string"/>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Depart" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:DepartName"/>
+                                    <xs:element name="DepartBasic" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>科室基本信息</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element name="DepartType">
+                                                    <xs:annotation>
+                                                        <xs:documentation>科室类别</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                            <xs:enumeration value="普通"/>
+                                                            <xs:enumeration value="专家"/>
+                                                            <xs:enumeration value="普通和专家"/>
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:element>
+                                                <xs:element name="DepartIntro" type="xs:string" minOccurs="0">
+                                                    <xs:annotation>
+                                                        <xs:documentation>科室简介</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                                <xs:element name="Limited" type="xs:unsignedInt" minOccurs="0">
+                                                    <xs:annotation>
+                                                        <xs:documentation>放号限额</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                                <xs:element ref="tns:RegistryFee"/>
+                                                <xs:element ref="tns:ClinicFee"/>
+                                                <xs:element name="DepartSex" minOccurs="0">
+                                                    <xs:annotation>
+                                                        <xs:documentation>科室性别限制</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                            <xs:enumeration value="0"/>
+                                                            <xs:enumeration value="M"/>
+                                                            <xs:enumeration value="F"/>
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:element>
+                                                <xs:element name="ChildAge" type="xs:unsignedByte" minOccurs="0">
+                                                    <xs:annotation>
+                                                        <xs:documentation>儿科年龄限制</xs:documentation>
+                                                    </xs:annotation>
+                                                </xs:element>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                    <xs:element ref="tns:Schedual" minOccurs="0" maxOccurs="unbounded"/>
+                                    <xs:element name="Doctor" minOccurs="0" maxOccurs="unbounded">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element ref="tns:DoctorName"/>
+                                                <xs:element name="DocBasic" minOccurs="0">
+                                                    <xs:annotation>
+                                                        <xs:documentation>医生基本信息</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:complexType>
+                                                        <xs:sequence>
+                                                            <xs:element name="DocSex">
+                                                                <xs:annotation>
+                                                                    <xs:documentation>医生性别(0男 1女)</xs:documentation>
+                                                                </xs:annotation>
+                                                                <xs:simpleType>
+                                                                    <xs:restriction base="xs:string">
+                                                                        <xs:enumeration value="男"/>
+                                                                        <xs:enumeration value="女"/>
+                                                                    </xs:restriction>
+                                                                </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element name="DocRank" minOccurs="0">
+                                                                <xs:annotation>
+                                                                    <xs:documentation>医生职称</xs:documentation>
+                                                                </xs:annotation>
+                                                                <xs:simpleType>
+                                                                    <xs:restriction base="xs:string">
+                                                                        <xs:maxLength value="20"/>
+                                                                    </xs:restriction>
+                                                                </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element name="DoctorInro" minOccurs="0">
+                                                                <xs:annotation>
+                                                                    <xs:documentation>医生简介</xs:documentation>
+                                                                </xs:annotation>
+                                                                <xs:simpleType>
+                                                                    <xs:restriction base="xs:string">
+                                                                        <xs:maxLength value="200"/>
+                                                                    </xs:restriction>
+                                                                </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element name="DocMajor" minOccurs="0">
+                                                                <xs:annotation>
+                                                                    <xs:documentation>医生特长</xs:documentation>
+                                                                </xs:annotation>
+                                                                <xs:simpleType>
+                                                                    <xs:restriction base="xs:string">
+                                                                        <xs:maxLength value="100"/>
+                                                                    </xs:restriction>
+                                                                </xs:simpleType>
+                                                            </xs:element>
+                                                            <xs:element name="IsExpert" type="xs:boolean">
+                                                                <xs:annotation>
+                                                                    <xs:documentation>是否专家</xs:documentation>
+                                                                </xs:annotation>
+                                                            </xs:element>
+                                                            <xs:element ref="tns:RegistryFee"/>
+                                                            <xs:element ref="tns:ClinicFee"/>
+                                                        </xs:sequence>
+                                                    </xs:complexType>
+                                                </xs:element>
+                                                <xs:element ref="tns:Schedual" minOccurs="0" maxOccurs="unbounded"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRegInfoReq">
+                <xs:annotation>
+                    <xs:documentation>查询预约信息请求</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:AuthInfo"/>
+                        <xs:element name="PatientIdentify">
+                            <xs:annotation>
+                                <xs:documentation>患者识别信息</xs:documentation>
+                            </xs:annotation>
+                            <xs:complexType>
+                                <xs:choice>
+                                    <xs:element ref="tns:SN" minOccurs="0"/>
+                                    <xs:element ref="tns:IdCard"/>
+                                    <xs:element name="Other" minOccurs="0">
+                                        <xs:complexType>
+                                            <xs:sequence>
+                                                <xs:element ref="tns:Name" minOccurs="0"/>
+                                                <xs:element ref="tns:Phone" minOccurs="0"/>
+                                            </xs:sequence>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:choice>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="Filter" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="BeginDate" type="xs:date">
+                                        <xs:annotation>
+                                            <xs:documentation>就诊起始日期（如 2012-12-20）</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="EndDate" type="xs:date">
+                                        <xs:annotation>
+                                            <xs:documentation>就诊结束日期</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element ref="tns:HospName" minOccurs="0"/>
+                                    <xs:element ref="tns:DepartName" minOccurs="0"/>
+                                    <xs:element ref="tns:DoctorName" minOccurs="0"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRegInfoRsp">
+                <xs:annotation>
+                    <xs:documentation>查询预约信息响应</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:Result"/>
+                        <xs:element name="Patient" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:IdCard"/>
+                                    <xs:element ref="tns:Name"/>
+                                    <xs:element ref="tns:Phone"/>
+                                    <xs:element name="Sex">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="男"/>
+                                                <xs:enumeration value="女"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="Birth" type="xs:date"/>
+                                    <xs:element name="InsureType">
+                                        <xs:annotation>
+                                            <xs:documentation>医保类型</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="自费"/>
+                                                <xs:enumeration value="市民卡"/>
+                                                <xs:enumeration value="园区医保"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="IsBlocked" type="xs:boolean">
+                                        <xs:annotation>
+                                            <xs:documentation>是否黑名单</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element ref="tns:PayAccount" minOccurs="0" maxOccurs="unbounded"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="RegInfo" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:HospName"/>
+                                    <xs:element ref="tns:SN"/>
+                                    <xs:element ref="tns:DepartName"/>
+                                    <xs:element ref="tns:DoctorName" minOccurs="0"/>
+                                    <xs:element name="SelfPay" type="xs:decimal">
+                                        <xs:annotation>
+                                            <xs:documentation>自费费用</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="InsurePay" type="xs:decimal">
+                                        <xs:annotation>
+                                            <xs:documentation>医保费用</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="RegDateTime" type="xs:dateTime">
+                                        <xs:annotation>
+                                            <xs:documentation>预约时间</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="ClinicDateTime" type="xs:dateTime">
+                                        <xs:annotation>
+                                            <xs:documentation>就诊时间（开始值）</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="IsFetched" type="xs:boolean">
+                                        <xs:annotation>
+                                            <xs:documentation>是否已经取号</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="FetchDateTime" type="xs:dateTime" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>取号时间</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="IsUnPayed" type="xs:boolean">
+                                        <xs:annotation>
+                                            <xs:documentation>是否未付费</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="UnpayedFee" type="xs:decimal" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>未付费费用</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="IsQuit" type="xs:boolean">
+                                        <xs:annotation>
+                                            <xs:documentation>是否退号</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="QuitTime" type="xs:dateTime" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>退号时间</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element ref="tns:RegFrom"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRegPoolReq">
+                <xs:annotation>
+                    <xs:documentation>查询号源信息请求</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:AuthInfo"/>
+                        <xs:element name="Filter">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:HospName"/>
+                                    <xs:element ref="tns:DepartName"/>
+                                    <xs:element ref="tns:DoctorName" minOccurs="0"/>
+                                    <xs:element ref="tns:WorkDate"/>
+                                    <xs:element ref="tns:WorkType"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="GetRegPoolRsp">
+                <xs:annotation>
+                    <xs:documentation>查询号源信息响应</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:Result"/>
+                        <xs:element name="PoolInfo" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:StartTime"/>
+                                    <xs:element ref="tns:EndTime" minOccurs="0"/>
+                                    <xs:element name="TotalNum" type="xs:unsignedInt" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>本时段号源总数（当本时段仅有1个号时，本字段可省略）</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="LeftNum" type="xs:unsignedInt">
+                                        <xs:annotation>
+                                            <xs:documentation>本时段剩余号源数</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="SN" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation>挂号流水号</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="WorkDate" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation>排班日期</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="WorkType">
+                <xs:annotation>
+                    <xs:documentation>值班类别</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="上午"/>
+                        <xs:enumeration value="下午"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="RegisterReq">
+                <xs:annotation>
+                    <xs:documentation>预约/退号/修改预约请求</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:AuthInfo"/>
+                        <xs:element name="OperType">
+                            <xs:annotation>
+                                <xs:documentation>操作类型</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="AddReg"/>
+                                    <xs:enumeration value="DelReg"/>
+                                    <xs:enumeration value="ModReg"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element ref="tns:SN" minOccurs="0"/>
+                        <xs:element name="PatientInfo">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:IdCard"/>
+                                    <xs:element ref="tns:Name"/>
+                                    <xs:element ref="tns:Phone" minOccurs="0"/>
+                                    <xs:element name="Sex" minOccurs="0">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="男"/>
+                                                <xs:enumeration value="女"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element name="Birth" type="xs:date" minOccurs="0"/>
+                                    <xs:element name="InsureType">
+                                        <xs:simpleType>
+                                            <xs:restriction base="xs:string">
+                                                <xs:enumeration value="自费"/>
+                                                <xs:enumeration value="市民卡"/>
+                                                <xs:enumeration value="园区医保"/>
+                                            </xs:restriction>
+                                        </xs:simpleType>
+                                    </xs:element>
+                                    <xs:element ref="tns:PayAccount" minOccurs="0"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="RegInfo" minOccurs="0">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element ref="tns:HospName"/>
+                                    <xs:element ref="tns:DepartName"/>
+                                    <xs:element ref="tns:DoctorName" minOccurs="0"/>
+                                    <xs:element ref="tns:WorkDate"/>
+                                    <xs:element ref="tns:WorkType"/>
+                                    <xs:element ref="tns:StartTime"/>
+                                    <xs:element ref="tns:EndTime">
+                                        <xs:annotation>
+                                            <xs:documentation>号源结束时间</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="IsPayed" type="xs:boolean" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>是否已付费</xs:documentation>
+                                        </xs:annotation>
+                                    </xs:element>
+                                    <xs:element name="RegOperType" minOccurs="0">
+                                        <xs:annotation>
+                                            <xs:documentation>预约类型</xs:documentation>
+                                        </xs:annotation>
+                                        <xs:complexType>
+                                            <xs:choice>
+                                                <xs:element name="RadCheckType">
+                                                    <xs:annotation>
+                                                        <xs:documentation>放射检查类型</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                            <xs:enumeration value="CT"/>
+                                                            <xs:enumeration value="MRI"/>
+                                                            <xs:enumeration value="CR"/>
+                                                            <xs:enumeration value="DR"/>
+                                                            <xs:enumeration value="DSA"/>
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:element>
+                                                <xs:element name="BodyCheckSet">
+                                                    <xs:annotation>
+                                                        <xs:documentation>体检套餐类型</xs:documentation>
+                                                    </xs:annotation>
+                                                    <xs:simpleType>
+                                                        <xs:restriction base="xs:string">
+                                                            <xs:maxLength value="50"/>
+                                                        </xs:restriction>
+                                                    </xs:simpleType>
+                                                </xs:element>
+                                            </xs:choice>
+                                        </xs:complexType>
+                                    </xs:element>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element ref="tns:RegFrom"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="RegisterRsp">
+                <xs:annotation>
+                    <xs:documentation>预约响应</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:Result"/>
+                        <xs:element ref="tns:SN" minOccurs="0"/>
+                        <xs:element name="ClinicSerialNo" type="xs:unsignedInt" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>就诊序号</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="IdCard">
+                <xs:annotation>
+                    <xs:documentation>身份证号码</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="18"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Name">
+                <xs:annotation>
+                    <xs:documentation>姓名</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="Phone">
+                <xs:annotation>
+                    <xs:documentation>联系电话</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:maxLength value="20"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="StartTime" type="xs:time">
+                <xs:annotation>
+                    <xs:documentation>号源开始时间</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EndTime" type="xs:time">
+                <xs:annotation>
+                    <xs:documentation>号源结束时间，当下一个时段开始时间就是本时段结束时间时，可省略本字段</xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RegVia">
+                <xs:annotation>
+                    <xs:documentation>预约途径</xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="网站：12320"/>
+                        <xs:enumeration value="网站：挂号网"/>
+                        <xs:enumeration value="网站：智慧医疗"/>
+                        <xs:enumeration value="手机：APP"/>
+                        <xs:enumeration value="手机：WAP"/>
+                        <xs:enumeration value="电话"/>
+                        <xs:enumeration value="诊间预约"/>
+                        <xs:enumeration value="转诊预约"/>
+                        <xs:enumeration value="自助机预约"/>
+                        <xs:enumeration value="电视"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="RegFrom">
+                <xs:annotation>
+                    <xs:documentation>预约来源</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:RegVia"/>
+                        <xs:element name="Vendor" type="xs:string" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>预约前端服务提供商标识</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="Operator" type="xs:string">
+                            <xs:annotation>
+                                <xs:documentation>操作员标识</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="Schedual">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element ref="tns:WorkDate"/>
+                        <xs:element ref="tns:WorkType"/>
+                        <xs:element name="WorkStatus">
+                            <xs:annotation>
+                                <xs:documentation>排班状态</xs:documentation>
+                            </xs:annotation>
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="正常"/>
+                                    <xs:enumeration value="停诊"/>
+                                    <xs:enumeration value="停诊但保留预约"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="ExpertFee" type="xs:decimal" minOccurs="0">
+                            <xs:annotation>
+                                <xs:documentation>专家费</xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="PayAccount">
+                <xs:annotation>
+                    <xs:documentation>支付账号</xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="支付类型">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:string">
+                                    <xs:enumeration value="支付宝"/>
+                                    <xs:enumeration value="预充值账户"/>
+                                    <xs:enumeration value="微信"/>
+                                    <xs:enumeration value="银联"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="支付账号" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:interface name="HospitalInfo">
+        <wsdl:operation name="GetHospInfo" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input messageLabel="In" element="tns:GetHospInfoReq"/>
+            <wsdl:output messageLabel="Out" element="tns:GetHospInfoRsp"/>
+        </wsdl:operation>
+        <wsdl:operation name="NotifyHospInfo" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input element="tns:NotifyHospInfoReq"/>
+            <wsdl:output element="tns:NotifyHospInfoRsp"/>
+        </wsdl:operation>
+    </wsdl:interface>
+    <wsdl:interface name="Query">
+        <wsdl:operation name="GetRegInfo" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input element="tns:GetRegInfoReq"/>
+            <wsdl:output element="tns:GetRegInfoRsp"/>
+        </wsdl:operation>
+        <wsdl:operation name="GetRegPool" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input element="tns:GetRegPoolReq"/>
+            <wsdl:output element="tns:GetRegPoolRsp"/>
+        </wsdl:operation>
+    </wsdl:interface>
+    <wsdl:interface name="Register">
+        <wsdl:operation name="Register" pattern="http://www.w3.org/ns/wsdl/in-out">
+            <wsdl:input element="tns:RegisterReq"/>
+            <wsdl:output element="tns:RegisterRsp"/>
+        </wsdl:operation>
+    </wsdl:interface>
+    <wsdl:binding name="ServiceSoap" interface="tns:HospitalInfo" type="http://www.w3.org/ns/wsdl/soap"
+                  wsoap:protocol="http://www.w3.org/2003/05/soap/bindings/HTTP/">
+        <wsdl:operation ref="tns:GetHospInfo" wsoap:mep="http://www.w3.org/2003/05/soap/mep/request-response"/>
+        <wsdl:operation ref="tns:NotifyHospInfo">
+            <wsdl:input/>
+            <wsdl:output/>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="Service" interface="tns:HospitalInfo">
+        <wsdl:endpoint name="NewEndpoint" binding="tns:ServiceSoap"/>
+    </wsdl:service>
+</wsdl:description>

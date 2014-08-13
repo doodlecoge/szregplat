@@ -1,0 +1,138 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             targetNamespace="http://service.hch.me"
+             xmlns:tns="http://service.hch.me"
+             name="Ws320ImplService">
+    <types>
+        <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+            <xsd:import namespace="http://service.hch.me" schemaLocation="ws320.xsd"/>
+        </xsd:schema>
+    </types>
+
+
+    <message name="GetHospInfoReq">
+        <part name="parameters" element="tns:GetHospInfoReq"/>
+    </message>
+    <message name="GetHospInfoRsp">
+        <part name="parameters" element="tns:GetHospInfoRsp"/>
+    </message>
+
+    <message name="NotifyHospInfoReq">
+        <part name="parameters" element="tns:NotifyHospInfoReq"/>
+    </message>
+    <message name="NotifyHospInfoRsp">
+        <part name="parameters" element="tns:NotifyHospInfoRsp"/>
+    </message>
+
+    <message name="GetRegInfoReq">
+        <part name="parameters" element="tns:GetRegInfoReq"/>
+    </message>
+    <message name="GetRegInfoRsp">
+        <part name="parameters" element="tns:GetRegInfoRsp"/>
+    </message>
+
+    <message name="GetRegPoolReq">
+        <part name="parameters" element="tns:GetRegPoolReq"/>
+    </message>
+    <message name="GetRegPoolRsp">
+        <part name="parameters" element="tns:GetRegPoolRsp"/>
+    </message>
+
+    <message name="RegisterReq">
+        <part name="parameters" element="tns:RegisterReq"/>
+    </message>
+    <message name="RegisterRsp">
+        <part name="parameters" element="tns:RegisterRsp"/>
+    </message>
+
+
+    <portType name="Ws320">
+        <operation name="GetHospInfo">
+            <input message="tns:GetHospInfoReq"/>
+            <output message="tns:GetHospInfoRsp"/>
+        </operation>
+
+        <operation name="NotifyHospInfo">
+            <input message="tns:NotifyHospInfoReq"/>
+            <output message="tns:NotifyHospInfoRsp"/>
+        </operation>
+
+        <operation name="GetRegInfo">
+            <input message="tns:GetRegInfoReq"/>
+            <output message="tns:GetRegInfoRsp"/>
+        </operation>
+
+        <operation name="GetRegPool">
+            <input message="tns:GetRegPoolReq"/>
+            <output message="tns:GetRegPoolRsp"/>
+        </operation>
+
+        <operation name="Register">
+            <input message="tns:RegisterReq"/>
+            <output message="tns:RegisterRsp"/>
+        </operation>
+    </portType>
+
+    <binding name="Ws320ImplPortBinding" type="tns:Ws320">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <operation name="GetHospInfo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+
+        <operation name="NotifyHospInfo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="GetRegInfo">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+        <operation name="GetRegPool">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+
+        <operation name="Register">
+            <soap:operation soapAction=""/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+
+    </binding>
+    <service name="Ws320ImplService">
+        <port name="Ws320ImplPort" binding="tns:Ws320ImplPortBinding">
+            <soap:address location="http://localhost:8080/hello"/>
+        </port>
+    </service>
+</definitions>

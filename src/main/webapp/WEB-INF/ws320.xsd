@@ -1,0 +1,709 @@
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://service.hch.me"
+        xmlns:tns="http://service.hch.me"
+        elementFormDefault="qualified">
+  <element name="GetHospInfoRequest">
+    <annotation>
+      <documentation>获取医院信息请求</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="AuthInfo" type="tns:tAuthInfo"/>
+        <element name="Filter">
+          <annotation>
+            <documentation>过滤信息</documentation>
+          </annotation>
+          <complexType>
+            <sequence>
+              <element name="HospName" type="tns:tName" minOccurs="0"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="GetHospInfoResponse">
+    <annotation>
+      <documentation>获取医院信息响应</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="Result" type="tns:tResult"/>
+        <element name="Hospital" type="tns:tHospital" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="GetRegInfoRequest">
+    <annotation>
+      <documentation>查询预约信息请求</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="AuthInfo" type="tns:tAuthInfo"/>
+        <element name="Filter">
+          <annotation>
+            <documentation>患者识别信息</documentation>
+          </annotation>
+          <complexType>
+            <sequence>
+              <element name="id" type="tns:tId"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="GetRegInfoResponse">
+    <annotation>
+      <documentation>查询预约信息响应</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="Result" type="tns:tResult"/>
+        <element name="Patient" minOccurs="0">
+          <complexType>
+            <sequence>
+              <element name="id" type="tns:tId"/>
+              <element name="Name" type="tns:tName"/>
+              <element name="Phone" type="tns:tName"/>
+              <element name="Sex">
+                <simpleType>
+                  <restriction base="string">
+                    <enumeration value="M"/>
+                    <enumeration value="F"/>
+                  </restriction>
+                </simpleType>
+              </element>
+              <element name="Birth" type="date"/>
+              <element name="InsuranceType">
+                <annotation>
+                  <documentation>医保类型</documentation>
+                </annotation>
+                <simpleType>
+                  <restriction base="string">
+                    <enumeration value="自费"/>
+                    <enumeration value="市民卡"/>
+                    <enumeration value="园区医保"/>
+                  </restriction>
+                </simpleType>
+              </element>
+              <element name="IsBlocked" type="boolean">
+                <annotation>
+                  <documentation>是否黑名单</documentation>
+                </annotation>
+              </element>
+              <element name="PayAccount" type="tns:tPayAccount" minOccurs="0"/>
+            </sequence>
+          </complexType>
+        </element>
+        <element name="RegInfo" minOccurs="0">
+          <complexType>
+            <sequence>
+              <element name="HospName" type="tns:tName"/>
+              <element name="SN" type="tns:tSN"/>
+              <element name="DepartName" type="tns:tName"/>
+              <element name="DoctorName" type="tns:tName"
+                       minOccurs="0"/>
+              <element name="SelfPay" type="float">
+                <annotation>
+                  <documentation>自费费用</documentation>
+                </annotation>
+              </element>
+              <element name="InsurePay" type="float">
+                <annotation>
+                  <documentation>医保费用</documentation>
+                </annotation>
+              </element>
+              <element name="RegDateTime" type="dateTime">
+                <annotation>
+                  <documentation>预约时间</documentation>
+                </annotation>
+              </element>
+              <element name="ClinicDateTime" type="dateTime">
+                <annotation>
+                  <documentation>就诊时间（开始值）
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="IsFetched" type="boolean">
+                <annotation>
+                  <documentation>是否已经取号
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="FetchDateTime" type="dateTime" minOccurs="0">
+                <annotation>
+                  <documentation>取号时间</documentation>
+                </annotation>
+              </element>
+              <element name="IsUnPayed" type="boolean">
+                <annotation>
+                  <documentation>是否未付费</documentation>
+                </annotation>
+              </element>
+              <element name="UnpayedFee" type="decimal"
+                       minOccurs="0">
+                <annotation>
+                  <documentation>未付费费用</documentation>
+                </annotation>
+              </element>
+              <element name="IsQuit" type="boolean">
+                <annotation>
+                  <documentation>是否退号</documentation>
+                </annotation>
+              </element>
+              <element name="QuitTime" type="dateTime"
+                       minOccurs="0">
+                <annotation>
+                  <documentation>退号时间</documentation>
+                </annotation>
+              </element>
+              <element name="RegFrom" type="tns:tRegFrom"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="GetRegPoolRequest">
+    <annotation>
+      <documentation>查询号源信息请求(剩余多少个号)</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="AuthInfo" type="tns:tAuthInfo"/>
+        <element name="Filter">
+          <complexType>
+            <sequence>
+              <element name="HospName" type="tns:tName"/>
+              <element name="DepartName" type="tns:tName"/>
+              <element name="DoctorName" type="tns:tName"
+                       minOccurs="0"/>
+              <element name="WorkDate" type="date"/>
+              <element name="WorkType" type="tns:tWorkType"/>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="GetRegPoolResponse">
+    <annotation>
+      <documentation>查询号源信息响应</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="Result" type="tns:tResult"/>
+        <element name="PoolInfo" minOccurs="0">
+          <complexType>
+            <sequence>
+              <element name="StartTime" type="time"/>
+              <element name="EndTime" type="time" minOccurs="0"/>
+              <element name="TotalNum" type="unsignedInt">
+                <annotation>
+                  <documentation>
+                    本时段号源总数
+                  </documentation>
+                </annotation>
+              </element>
+              <element name="LeftNum" type="unsignedInt">
+                <annotation>
+                  <documentation>
+                    本时段剩余号源数
+                  </documentation>
+                </annotation>
+              </element>
+            </sequence>
+          </complexType>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="NotifyHospInfoRequest">
+    <annotation>
+      <documentation>通知医院信息变更请求</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="Hospital" type="tns:tHospital"/>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="NotifyHospInfoResponse">
+    <annotation>
+      <documentation>通知医院信息变更响应</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="Result" type="tns:tResult"/>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="RegisterRequest">
+    <annotation>
+      <documentation>预约/退号/修改预约请求</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="AuthInfo" type="tns:tAuthInfo"/>
+        <element name="OperType">
+          <annotation>
+            <documentation>操作类型</documentation>
+          </annotation>
+          <simpleType>
+            <restriction base="string">
+              <enumeration value="AddReg"/>
+              <enumeration value="DelReg"/>
+              <enumeration value="ModReg"/>
+            </restriction>
+          </simpleType>
+        </element>
+        <element name="SN" type="tns:tSN" minOccurs="0"/>
+        <element name="PatientInfo">
+          <complexType>
+            <sequence>
+              <element name="id" type="tns:tId"/>
+              <element name="Name" type="tns:tName"/>
+              <element name="Phone" type="tns:tPhone" minOccurs="0"/>
+              <element name="Sex" minOccurs="0">
+                <simpleType>
+                  <restriction base="string">
+                    <enumeration value="男"/>
+                    <enumeration value="女"/>
+                  </restriction>
+                </simpleType>
+              </element>
+              <element name="Birth" type="date" minOccurs="0"/>
+                <element name="InsureType">
+                <annotation>
+                  <documentation>
+                    0: 自费, 1: 市民卡, 2: 园区医保
+                  </documentation>
+                </annotation>
+                <simpleType>
+                  <restriction base="string">
+                    <enumeration value="0"/>
+                    <enumeration value="1"/>
+                    <enumeration value="2"/>
+                  </restriction>
+                </simpleType>
+              </element>
+              <element name="PayAccount" type="tns:tPayAccount" minOccurs="0"/>
+            </sequence>
+          </complexType>
+        </element>
+        <element name="RegInfo" minOccurs="0">
+          <complexType>
+            <sequence>
+              <element name="HospName" type="tns:tName"/>
+              <element name="DepartName" type="tns:tName"/>
+              <element name="DoctorName" type="tns:tName" minOccurs="0"/>
+              <element name="WorkDate" type="date"/>
+              <element name="WorkType" type="tns:tWorkType"/>
+              <element name="StartTime" type="time"/>
+              <element name="EndTime" type="time">
+                <annotation>
+                  <documentation>号源结束时间</documentation>
+                </annotation>
+              </element>
+              <element name="IsPayed" type="boolean" minOccurs="0">
+                <annotation>
+                  <documentation>是否已付费</documentation>
+                </annotation>
+              </element>
+            </sequence>
+          </complexType>
+        </element>
+        <element name="RegFrom" type="tns:tRegFrom"/>
+      </sequence>
+    </complexType>
+  </element>
+
+  <element name="RegisterResponse">
+    <annotation>
+      <documentation>预约响应</documentation>
+    </annotation>
+    <complexType>
+      <sequence>
+        <element name="Result" type="tns:tResult"/>
+        <element name="SN" type="tns:tSN" minOccurs="0"/>
+        <element name="ClinicSerialNo" type="unsignedInt" minOccurs="0">
+          <annotation>
+            <documentation>就诊序号</documentation>
+          </annotation>
+        </element>
+      </sequence>
+    </complexType>
+  </element>
+
+  <!--**********************************************-->
+
+
+  <complexType name="tAuthInfo">
+    <annotation>
+      <documentation>授权信息</documentation>
+    </annotation>
+    <sequence>
+      <element name="UserName">
+        <annotation>
+          <documentation>用户名</documentation>
+        </annotation>
+        <simpleType>
+          <restriction base="string">
+            <minLength value="3"/>
+            <maxLength value="16"/>
+          </restriction>
+        </simpleType>
+      </element>
+      <element name="Password">
+        <annotation>
+          <documentation>密码</documentation>
+        </annotation>
+        <simpleType>
+          <restriction base="string">
+            <minLength value="3"/>
+            <maxLength value="16"/>
+          </restriction>
+        </simpleType>
+      </element>
+    </sequence>
+  </complexType>
+
+  <complexType name="tResult">
+    <annotation>
+      <documentation>返回结果</documentation>
+    </annotation>
+    <sequence>
+      <element name="ResultCode" type="string"/>
+      <element name="ResultMsg" type="string" minOccurs="0"/>
+    </sequence>
+  </complexType>
+
+  <simpleType name="tName">
+    <restriction base="string">
+      <minLength value="1"/>
+      <maxLength value="20"/>
+    </restriction>
+  </simpleType>
+
+
+  <complexType name="tHospital">
+    <sequence>
+      <element name="Basic" minOccurs="0">
+        <annotation>
+          <documentation>医院基本数据</documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="Grade" type="string"
+                     minOccurs="0">
+              <annotation>
+                <documentation>医院等级</documentation>
+              </annotation>
+            </element>
+            <element name="Kind" type="string"
+                     minOccurs="0">
+              <annotation>
+                <documentation>医院性质</documentation>
+              </annotation>
+            </element>
+            <element name="Address" type="string"
+                     minOccurs="0">
+              <annotation>
+                <documentation>地址</documentation>
+              </annotation>
+            </element>
+            <element name="Phone" type="string"
+                     minOccurs="0">
+              <annotation>
+                <documentation>电话</documentation>
+              </annotation>
+            </element>
+            <element name="Intro" type="string"
+                     minOccurs="0">
+              <annotation>
+                <documentation>医院简介</documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="Departments" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="Depart" type="tns:tDepart" minOccurs="0"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="Name" type="tns:tName"/>
+  </complexType>
+
+
+  <complexType name="tDepart">
+    <sequence>
+      <element name="Basic" minOccurs="0">
+        <annotation>
+          <documentation>科室基本信息</documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="DepartType">
+              <annotation>
+                <documentation>科室类别</documentation>
+              </annotation>
+              <simpleType>
+                <restriction base="string">
+                  <enumeration value="普通"/>
+                  <enumeration value="专家"/>
+                  <enumeration value="普通和专家"/>
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="DepartIntro" type="string"
+                     minOccurs="0">
+              <annotation>
+                <documentation>科室简介</documentation>
+              </annotation>
+            </element>
+            <element name="Limited" type="unsignedInt"
+                     minOccurs="0">
+              <annotation>
+                <documentation>放号限额</documentation>
+              </annotation>
+            </element>
+            <element name="RegistryFee" type="float"
+                     minOccurs="0"/>
+            <element name="ClinicFee" type="float"
+                     minOccurs="0"/>
+            <element name="DepartSex" minOccurs="0">
+              <annotation>
+                <documentation>科室性别限制</documentation>
+              </annotation>
+              <simpleType>
+                <restriction base="string">
+                  <enumeration value="0"/>
+                  <enumeration value="M"/>
+                  <enumeration value="F"/>
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="ChildAge" type="unsignedInt" minOccurs="0">
+              <annotation>
+                <documentation>儿科年龄限制</documentation>
+              </annotation>
+            </element>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="Schedules" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="Schedule" type="tns:tSchedule" minOccurs="0"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="Doctors" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="Doctor" type="tns:tDoctor" minOccurs="0"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="Name" type="tns:tName"/>
+  </complexType>
+
+  <complexType name="tDoctor">
+    <sequence>
+      <element name="Basic" minOccurs="0">
+        <annotation>
+          <documentation>医生基本信息</documentation>
+        </annotation>
+        <complexType>
+          <sequence>
+            <element name="DocSex">
+              <annotation>
+                <documentation>医生性别(M: 男, F: 女)
+                </documentation>
+              </annotation>
+              <simpleType>
+                <restriction base="string">
+                  <enumeration value="M"/>
+                  <enumeration value="F"/>
+                </restriction>
+              </simpleType>
+            </element>
+            <element name="DocRank" type="string" minOccurs="0">
+              <annotation>
+                <documentation>医生职称</documentation>
+              </annotation>
+            </element>
+            <element name="DoctorInro" type="string" minOccurs="0">
+              <annotation>
+                <documentation>医生简介</documentation>
+              </annotation>
+            </element>
+            <element name="DocMajor" type="string" minOccurs="0">
+              <annotation>
+                <documentation>医生特长</documentation>
+              </annotation>
+            </element>
+            <element name="IsExpert" type="boolean">
+              <annotation>
+                <documentation>是否专家</documentation>
+              </annotation>
+            </element>
+            <element name="RegistryFee" type="float"/>
+            <element name="ClinicFee" type="float"/>
+          </sequence>
+        </complexType>
+      </element>
+      <element name="Schedules" maxOccurs="1">
+        <complexType>
+          <sequence>
+            <element name="Schedule" type="tns:tSchedule" minOccurs="0"/>
+          </sequence>
+        </complexType>
+      </element>
+    </sequence>
+    <attribute name="Name" type="tns:tName"/>
+  </complexType>
+
+  <complexType name="tSchedule">
+    <sequence>
+      <element name="WorkDate" type="date"/>
+      <element name="WorkType">
+        <simpleType>
+          <restriction base="string">
+            <enumeration value="am"/>
+            <enumeration value="pm"/>
+          </restriction>
+        </simpleType>
+      </element>
+      <element name="WorkStatus">
+        <annotation>
+          <documentation>排班状态(0: 正常, 1: 停诊, 2: 停诊但保留预约)
+          </documentation>
+        </annotation>
+        <simpleType>
+          <restriction base="string">
+            <enumeration value="0"/>
+            <enumeration value="1"/>
+            <enumeration value="2"/>
+          </restriction>
+        </simpleType>
+      </element>
+      <element name="ExpertFee" type="float" minOccurs="0">
+        <annotation>
+          <documentation>专家费/元</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+
+
+  <simpleType name="tSN">
+    <annotation>
+      <documentation>挂号流水号</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="20"/>
+    </restriction>
+  </simpleType>
+
+
+  <simpleType name="tWorkType">
+    <annotation>
+      <documentation>值班类别</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="am"/>
+      <enumeration value="pm"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="tId">
+    <annotation>
+      <documentation>身份证号码</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="18"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="tPhone">
+    <annotation>
+      <documentation>联系电话</documentation>
+    </annotation>
+    <restriction base="string">
+      <maxLength value="20"/>
+    </restriction>
+  </simpleType>
+
+  <simpleType name="tRegVia">
+    <annotation>
+      <documentation>预约途径</documentation>
+    </annotation>
+    <restriction base="string">
+      <enumeration value="网站：12320"/>
+      <enumeration value="网站：挂号网"/>
+      <enumeration value="网站：智慧医疗"/>
+      <enumeration value="手机：APP"/>
+      <enumeration value="手机：WAP"/>
+      <enumeration value="电话"/>
+      <enumeration value="诊间预约"/>
+      <enumeration value="转诊预约"/>
+      <enumeration value="自助机预约"/>
+      <enumeration value="电视"/>
+    </restriction>
+  </simpleType>
+
+
+  <complexType name="tRegFrom">
+    <annotation>
+      <documentation>预约来源</documentation>
+    </annotation>
+    <sequence>
+      <element name="RegVia" type="tns:tRegVia"/>
+      <element name="Vendor" type="string" minOccurs="0">
+        <annotation>
+          <documentation>预约前端服务提供商标识</documentation>
+        </annotation>
+      </element>
+      <element name="Operator" type="string">
+        <annotation>
+          <documentation>操作员标识</documentation>
+        </annotation>
+      </element>
+    </sequence>
+  </complexType>
+
+
+  <complexType name="tPayAccount">
+    <annotation>
+      <documentation>支付账号</documentation>
+    </annotation>
+    <sequence>
+      <element name="AccountType">
+        <simpleType>
+          <restriction base="string">
+            <enumeration value="支付宝"/>
+            <enumeration value="预充值账户"/>
+            <enumeration value="微信"/>
+            <enumeration value="银联"/>
+          </restriction>
+        </simpleType>
+      </element>
+      <element name="AccountNo" type="string"/>
+    </sequence>
+  </complexType>
+</schema>

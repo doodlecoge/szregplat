@@ -1,0 +1,10 @@
+.tbl {
+    border-collapse: collapse;
+}
+
+.tbl th, .tbl td {
+    border: 1px solid #888;
+    padding: 5px 10px;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="ws320Client" class="szregplat.webservice.client.Ws320Client">
+        <property name="defaultUri" value="http://localhost:8080/ws"/>
+        <property name="request" value="classpath:me/hch/service/client/ws320-request.xml"/>
+        <property name="messageSender">
+            <bean class="org.springframework.ws.transport.http.HttpComponentsMessageSender">
+                <property name="credentials">
+                    <bean class="org.apache.http.auth.UsernamePasswordCredentials">
+                        <constructor-arg value="hch:pass"/>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+    </bean>
+
+</beans>

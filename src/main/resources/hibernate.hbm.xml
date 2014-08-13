@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+   <!-- <class name="szregplat.model.Hospital" table="hospitalinfo">
+        <id name="hospid" column="hospid" type="java.lang.String"></id>
+        <property name="hospname" column="hospname" type="java.lang.String"></property>
+        <property name="hospBasic"
+    </class>-->
+    <class name="szregplat.model.Black" table="blacklist">
+        <id name="idCard" column="idcard" type="java.lang.String"></id>
+        <property name="enterReason" column="enter_reason" type="java.lang.String"></property>
+        <property name="createTime" column="createtime" type="java.util.Date"></property>
+    </class>
+    <class name="szregplat.model.be.Config" table="config">
+        <id name="key" column="key" type="java.lang.String"></id>
+        <property name="value" column="value" type="java.lang.String"></property>
+        <property name="annotation" column="annotation" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.model.Family" table="familyinfo">
+        <id name="id" column="id" type="java.lang.Integer"></id>
+        <property name="headIdCard" column="head_idcard" type="java.lang.String"></property>
+        <property name="membIdCard" column="member_idcard" type="java.lang.String"></property>
+        <property name="createTime" column="createtime" type="java.util.Date"></property>
+    </class>
+    <class name="szregplat.model.Patient" table="patientinfo">
+        <id name="idcard" column="idcard" type="java.lang.String"></id>
+        <property name="patientname" column="patientname" type="java.lang.String"></property>
+        <property name="password" column="password" type="java.lang.String"></property>
+        <property name="birthday" column="birthday" type="java.util.Date"></property>
+        <property name="sex" column="sex" type="java.lang.String"></property>
+        <property name="insureType" column="insure_type" type="java.lang.String"></property>
+        <property name="phone" column="phone" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.model.be.RegInfo" table="reglist">
+        <id name="SN" column="sn" type="java.lang.Long"></id>
+        <property name="idCard" column="idcard" type="java.lang.String"></property>
+        <property name="hospName" column="hospname" type="java.lang.String"></property>
+        <property name="departName" column="departname" type="java.lang.String"></property>
+        <property name="docName" column="doctorname" type="java.lang.String"></property>
+        <property name="insureType" column="insure_type" type="java.lang.String"></property>
+        <property name="insurePay" column="insure_pay" type="java.lang.Double"></property>
+        <property name="selfPay" column="selfpay" type="java.lang.Double"></property>
+        <property name="regTime" column="regtime" type="java.util.Date"></property>
+        <property name="clinicDate" column="clinicdate" type="java.util.Date"></property>
+        <property name="pipeBeginTime" column="pipe_begintime" type="java.util.Date"></property>
+        <property name="pipeEndTime" column="pipe_endtime" type="java.util.Date"></property>
+        <property name="clinicSN" column="clinic_sn" type="java.lang.Integer"></property>
+<!--
+        <property name="isFetched" column="isfetched" type="java.lang.Integer"></property>
+-->
+        <property name="fetchTime" column="fetchtime" type="java.util.Date"></property>
+<!--
+        <property name="isPayed" column="ispayed" type="java.lang.Integer"></property>
+-->
+        <property name="unPayedFee" column="unpayedfee" type="java.lang.Double"></property>
+        <property name="payType" column="pay_type" type="java.lang.String"></property>
+        <property name="payAccount" column="pay_account" type="java.lang.String"></property>
+        <property name="regVia" column="regvia" type="java.lang.String"></property>
+        <!--<property name="vendor" column="vendor" type="java.lang.String"></property>-->
+        <property name="operator" column="operator" type="java.lang.String"></property>
+<!--
+        <property name="isQuit" column="isquit" type="java.lang.Integer"></property>
+-->
+        <property name="quitTime" column="quit_time" type="java.util.Date"></property>
+        <property name="quitVia" column="quit_via" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.model.be.FilterRule" table="filter_rule">
+        <id name="xPath" column="xpath" type="java.lang.String"></id>
+        <property name="trigType" column="trigtype" type="java.lang.String"></property>
+        <property name="oldValue" column="oldvalue" type="java.lang.String"></property>
+        <property name="newValue" column="newvalue" type="java.lang.String"></property>
+        <property name="methodName" column="methodname" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.model.be.TradeDetail" table="trade_detail">
+        <id name="id" column="id" type="java.lang.Integer"></id>
+        <property name="eventType" column="event_type" type="java.lang.String"></property>
+        <property name="createTime" column="createtime" type="java.util.Date"></property>
+        <property name="eventDescription" column="event_description" type="java.lang.String"></property>
+        <property name="sponsor" column="sponsor" type="java.lang.String"></property>
+        <property name="tradeObj" column="tradeobject" type="java.lang.String"></property>
+        <property name="reporter" column="reporter" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.model.Referral" table="referral">
+        <id name="SN" column="sn" type="java.lang.String"></id>
+        <property name="outHospName"  column="out_hospname" type="java.lang.String"></property>
+        <property name="outDepartName" column="out_departname" type="java.lang.String"></property>
+        <property name="outDoctorName" column="out_doctorname" type="java.lang.String"></property>
+        <property name="reason" column="reason" type="java.lang.String"></property>
+        <property name="medicalRecord" column="medicalrecord" type="java.lang.String"></property>
+        <property name="preDiagnosis" column="pre_diagnosis" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.model.be.Vendor" table="vendor">
+        <id name="vendorName" column="vendorname" type="java.lang.String"></id>
+        <property name="userName" column="username" type="java.lang.String"></property>
+        <property name="password" column="password" type="java.lang.String"></property>
+        <property name="translateAddr" column="translate_addr" type="java.lang.String"></property>
+    </class>
+
+</hibernate-mapping>

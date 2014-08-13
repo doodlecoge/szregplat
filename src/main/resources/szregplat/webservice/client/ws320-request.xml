@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GetHospInfoRequest xmlns="http://service.hch.me">
+    <AuthInfo>
+        <UserName>aaaa</UserName>
+        <Password>bbbb</Password>
+    </AuthInfo>
+    <Filter>
+      <HospName>ZYYY name</HospName>
+    </Filter>
+</GetHospInfoRequest>
