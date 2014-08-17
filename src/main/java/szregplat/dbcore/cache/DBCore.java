@@ -24,6 +24,7 @@ public class DBCore {
     private static final Logger log = LoggerFactory.getLogger(DBCore.class);
     private static BlockingQueue blockingQueue ;
 
+    /*****************************并发处理**************************/
     /**
      * 向DBFunc提供的方法，在DBFunc内部使用。将QueueEntry添加到队尾...
      * 方法被加锁，，添加Entry到队列
@@ -35,7 +36,7 @@ public class DBCore {
     }
 
 
-    /*********************Cache 变更*********************/
+    /*****************************Cache 变更**************************/
 
     /**
      * 向患者缓存中添加新的患者.判断患者是否已经存在.
@@ -61,6 +62,12 @@ public class DBCore {
             log.error("用户缓存列表没有建立");
             return result ;
         }
+        if(DBCache.patients.get(patient.idcard) != null){
+            /**用户缓存列表中已存在该用户*/
+            result.set(ErrorCode.HandleCacheFail,"用户缓存列表存在该用户");
+            return result ;
+        }
+
         /**向用户缓存添加用户*/
         DBCache.patients.put(patient.idcard, patient);
         if (!DBCache.patients.containsKey(patient.idcard)) {
@@ -346,6 +353,7 @@ public class DBCore {
         if(result1.ResultCode != 0){
             /**更新缓存失败，返回错误的结果...不再更新数据库*/
             result = result1 ;
+            log.error("更新预约记录缓存失败！！详情："+result.ResultMsg);
             return result ;
         }
 

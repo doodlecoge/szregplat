@@ -1,9 +1,13 @@
 package szregplat.dbcore.dao;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import szregplat.model.Patient;
+
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -53,6 +57,47 @@ public class UserDao extends SimpleBaseDao<Patient> {
         } finally {
             if (session != null) session.close();
         }
+    }
+
+    /**
+     * 根据用户的身份证号，获得用户的相关信息
+     * @param idCard  用户的身份证号
+     * @return        如果用户存在，返回用户的信息，否则返回null
+     */
+    public Patient getPatientByIdCard(String idCard){
+
+        Patient patient = null;
+        Session session = null;
+        try {
+            session = getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(Patient.class).add(Restrictions.eq("idCard", idCard));
+            patient = (Patient) criteria.uniqueResult();
+        } catch (Exception e) {
+            log.error("查询数据库中患者信息异常！查询身份证号："+idCard);
+        } finally {
+            if (session != null) session.close();
+        }
+        return patient ;
+
+    }
+
+    /**
+     * 查询数据库中所有的患者列表
+     * @return        如果数据库中患者存在，返回患者列表。否则返回null
+     */
+    public List<Patient> getAllPatients(){
+        List<Patient> list = null ;
+        Session session = null;
+        try {
+            session = getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(Patient.class);
+            list = criteria.list();
+        } catch (Exception e) {
+            log.error("查询数据库中患者列表异常！！！");
+        } finally {
+            if (session != null) session.close();
+        }
+        return list ;
     }
 
 }

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import szregplat.model.be.Config;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: WeiSW
@@ -98,6 +100,25 @@ public class ConfigDao extends SimpleBaseDao<Config> {
             if (session != null) session.close();
         }
         return config;
+    }
+
+    /**
+     * 获得数据库中所有的配置项列表
+     * @return    所有的配置项列表，如果没有配置项，返回null
+     */
+    public ArrayList<Config> getAllConfigs(){
+        ArrayList<Config> configs = null;
+        Session session = null;
+        try {
+            session = getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(Config.class);
+            configs = (ArrayList<Config>) criteria.list();
+        } catch (Exception e) {
+            log.error("查询数据库中配置项列表异常！");
+        } finally {
+            if (session != null) session.close();
+        }
+        return configs;
     }
 
 }

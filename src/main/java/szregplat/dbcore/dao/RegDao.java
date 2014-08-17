@@ -2,12 +2,17 @@ package szregplat.dbcore.dao;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import szregplat.model.be.RegInfo;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -98,6 +103,58 @@ public class RegDao extends SimpleBaseDao<RegInfo> {
             if (session != null) session.close();
         }
         return regInfo ;
+    }
+
+    /**
+     * 根据患者的身份证号，查询所有的预约记录
+     * @param idCard  患者的身份证号
+     * @return        返回预约记录列表，如果预约记录不存在，返回null
+     */
+    public List<RegInfo> getRegInfoListByIdCard(String idCard){
+        List<RegInfo> list = null ;
+        Session session = null;
+        try {
+            session = getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(RegInfo.class).add(Restrictions.eq("idcard", idCard)).addOrder(Order.asc("SN"))  ;
+            list = criteria.list();
+        } catch (Exception e) {
+            log.error("查询数据库中患者预约记录列表异常！！！");
+        } finally {
+            if (session != null) session.close();
+        }
+        return list ;
+    }
+
+    /**
+     * 获得从当前时间开始向前，指定时间段之内的预约记录列表
+     * @param idCard   患者的身份证号
+     * @param period   指定的时间段。如：3、表示从现在起倒推三个月的预约记录
+     * @return         返回预约记录列表，如果预约记录为空，则列表的长度为0
+     */
+    public List<RegInfo> getRegInfoListByIdCardAndPeriod(String idCard , int period){
+        /**当前时间*/
+        Date to = new Date();
+        /**时间段之前的时间*/
+        Calendar calendar = Calendar.getInstance() ;
+        calendar.add(Calendar.MONTH,-period);
+        Date from = calendar.getTime();
+        /**查询数据库获得预约信息列表*/
+        List<RegInfo> list = new ArrayList<RegInfo>();
+        Session session = null;
+        try {
+            session = getSessionFactory().openSession();
+            Criteria criteria = session.createCriteria(RegInfo.class)
+                    .add(Restrictions.eq("idcard", idCard))
+                    .add(Restrictions.between("date", from, to))
+                    .addOrder(Order.asc("SN"));
+            list = criteria.list();
+        } catch (Exception e) {
+            log.error("查询数据库中患者指定时间段的预约记录列表异常！！！指定的时间段："+period);
+        } finally {
+            if (session != null) session.close();
+        }
+        return list ;
+
     }
 
 }

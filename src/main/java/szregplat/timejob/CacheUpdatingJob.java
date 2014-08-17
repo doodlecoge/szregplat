@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 //import java.nio.file.Files;
 //import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -265,6 +267,95 @@ public class CacheUpdatingJob extends Thread {
         List<DoctorWork> doctorWorks = loadHisData(doc_work, docWorkTagName, ts, hospitalId, DoctorWork.class, DoctorWorkFields);
 
         return populateCache(hospitalId, departInfos, doctorInfos, departWorks, doctorWorks);
+    }
+
+    private Map<String, Depart> load(String hospitalId,
+                                     List<DepartInfo> departInfos,
+                                     List<DoctorInfo> doctorInfos,
+                                     List<DepartWork> departWorks,
+                                     List<DoctorWork> doctorWorks) {
+        Map<String, Depart> departs = new HashMap<String, Depart>();
+
+
+        // id => depart
+        for (DepartInfo info : departInfos) {
+            if (departs.containsKey(info.DepartId)) {
+                // fixme: notify admin
+                log.error("duplicate depart: " + info.DepartName);
+                continue;
+            }
+
+            Depart depart = new Depart();
+            depart.departId = info.DepartId;
+            depart.departName = info.DepartName;
+
+            DepartBasic basic = new DepartBasic();
+            basic.childAge = Integer.valueOf(info.BabyAge);
+            basic.clinicFee = Double.valueOf(info.ClinicFee);
+            basic.departIntro = info.DepartIntro;
+            basic.departSex = info.Departsex;
+            basic.departType = info.DepartType;
+
+            depart.departBasic = basic;
+
+            departs.put(depart.departId, depart);
+        }
+
+        for (DepartWork work : departWorks) {
+            Schedual s = new Schedual();
+            s.workDate = parseDate(work.WorkDate);
+            s.workStatus = work.WorkStatus;
+            s.workType = work.WorkType;
+
+
+        }
+
+        Map<String, Doctor> doctors = new HashMap<String, Doctor>();
+        Map<String, List<Doctor>> departDoctors =
+                new HashMap<String, List<Doctor>>();
+        for (DoctorInfo info : doctorInfos) {
+            if (doctors.containsKey(info.DoctorId)) {
+                // fixme: notify admin
+                log.error("duplicate doctor: " + info.DoctorId);
+                continue;
+            }
+
+            Doctor doctor = new Doctor();
+            doctor.docId = info.DoctorId;
+            doctor.docName = info.DoctorName;
+
+            DoctorBasic basic = new DoctorBasic();
+            basic.docRank = info.DoctorRank;
+            basic.docSex = info.DoctorSex;
+            basic.isExpert = "1".equals(info.IsExpert) ? true : false;
+
+            doctor.doctorBasic = basic;
+
+            doctors.put(doctor.docId, doctor);
+            if (!departDoctors.containsKey(info.DepartId)) {
+                departDoctors.put(info.DepartId, new ArrayList<Doctor>());
+            }
+            departDoctors.get(info.DepartId).add(doctor);
+        }
+    }
+
+
+    private Date parseDate(String str) {
+        String[] ptns = {
+                "yyyy-MM-dd HH:mm:ss.S",
+                "yyyy-MM-dd HH:mm:ss",
+                "yyyy-MM-dd"
+        };
+
+        for (String ptn : ptns) {
+            SimpleDateFormat df = new SimpleDateFormat(ptn);
+            try {
+                Date d = df.parse(str);
+                return d;
+            } catch (ParseException e) {
+            }
+        }
+        return null;
     }
 
     private <T> List<T> loadHisData(String which, String tagName, String ts, String hospitalId, Class<T> klass, Map<String, Field> fields) {

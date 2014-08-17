@@ -1,6 +1,7 @@
 package szregplat.model;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -19,5 +20,7 @@ public class Schedual {
     public String workStatus ;
     /**专家费*/
     public double expertFee ;
+    /**号源信息*/
+    public List<PoolInfo> poolList ;
 
 }

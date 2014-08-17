@@ -31,6 +31,8 @@ public class RegInfo {
     public Date regTime ;
     /**就诊日期*/
     public Date clinicDate ;
+    /**排版类型：上午、下午*/
+    public String workType ;
     /**就诊开始时间*/
     public Date pipeBeginTime ;
     /**就诊结束时间*/
@@ -112,19 +114,19 @@ public class RegInfo {
         this.insureType = insureType;
     }
 
-    public double getInsurePay() {
+    public Double getInsurePay() {
         return insurePay;
     }
 
-    public void setInsurePay(double insurePay) {
+    public void setInsurePay(Double insurePay) {
         this.insurePay = insurePay;
     }
 
-    public double getSelfPay() {
+    public Double getSelfPay() {
         return selfPay;
     }
 
-    public void setSelfPay(double selfPay) {
+    public void setSelfPay(Double selfPay) {
         this.selfPay = selfPay;
     }
 
@@ -142,6 +144,14 @@ public class RegInfo {
 
     public void setClinicDate(Date clinicDate) {
         this.clinicDate = clinicDate;
+    }
+
+    public String getWorkType() {
+        return workType;
+    }
+
+    public void setWorkType(String workType) {
+        this.workType = workType;
     }
 
     public Date getPipeBeginTime() {
@@ -168,11 +178,11 @@ public class RegInfo {
         this.clinicSN = clinicSN;
     }
 
-    public int getFetched() {
+    public Integer getFetched() {
         return isFetched;
     }
 
-    public void setFetched(int fetched) {
+    public void setFetched(Integer fetched) {
         isFetched = fetched;
     }
 
@@ -184,19 +194,19 @@ public class RegInfo {
         this.fetchTime = fetchTime;
     }
 
-    public int getPayed() {
+    public Integer getPayed() {
         return isPayed;
     }
 
-    public void setPayed(int payed) {
+    public void setPayed(Integer payed) {
         isPayed = payed;
     }
 
-    public double getUnPayedFee() {
+    public Double getUnPayedFee() {
         return unPayedFee;
     }
 
-    public void setUnPayedFee(double unPayedFee) {
+    public void setUnPayedFee(Double unPayedFee) {
         this.unPayedFee = unPayedFee;
     }
 
@@ -240,11 +250,11 @@ public class RegInfo {
         this.operator = operator;
     }
 
-    public int getQuit() {
+    public Integer getQuit() {
         return isQuit;
     }
 
-    public void setQuit(int quit) {
+    public void setQuit(Integer quit) {
         isQuit = quit;
     }
 

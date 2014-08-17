@@ -38,4 +38,117 @@ public class HospitalBasic {
     /** 卫生机构类别（综合医院、护理院等） */
     public String classes ;
 
+
+    /********************SET/GET**********************/
+    public String getGrade() {
+        return grade;
+    }
+
+    public void setGrade(String grade) {
+        this.grade = grade;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public String getWay() {
+        return way;
+    }
+
+    public void setWay(String way) {
+        this.way = way;
+    }
+
+    public String getHospimg() {
+        return hospimg;
+    }
+
+    public void setHospimg(String hospimg) {
+        this.hospimg = hospimg;
+    }
+
+    public String getHospwebaddr() {
+        return hospwebaddr;
+    }
+
+    public void setHospwebaddr(String hospwebaddr) {
+        this.hospwebaddr = hospwebaddr;
+    }
+
+    public String getTranslateType() {
+        return translateType;
+    }
+
+    public void setTranslateType(String translateType) {
+        this.translateType = translateType;
+    }
+
+    public String getTranslateAddr() {
+        return translateAddr;
+    }
+
+    public void setTranslateAddr(String translateAddr) {
+        this.translateAddr = translateAddr;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public int getSortcode() {
+        return sortcode;
+    }
+
+    public void setSortcode(int sortcode) {
+        this.sortcode = sortcode;
+    }
+
+    public String getZone() {
+        return zone;
+    }
+
+    public void setZone(String zone) {
+        this.zone = zone;
+    }
+
+    public String getClasses() {
+        return classes;
+    }
+
+    public void setClasses(String classes) {
+        this.classes = classes;
+    }
 }

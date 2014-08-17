@@ -1,5 +1,7 @@
 package szregplat.dbcore.func;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import szregplat.dbcore.cache.DBCache;
 import szregplat.dbcore.cache.DBCore;
 import szregplat.dbcore.cache.ModContent;
@@ -22,6 +24,7 @@ import szregplat.model.enumerate.ErrorCode;
  * 负责处理业务接口
  */
 public class DBFunc {
+    private static final Logger log = LoggerFactory.getLogger(DBFunc.class);
 
     /**
      * 向缓存和数据库中插入一条患者记录。缓存中插入成功，再向数据库插入(阻塞队列)
@@ -44,7 +47,7 @@ public class DBFunc {
         Result temp = DBCore.db_addPatientToCache(patient);
         if(temp == null || temp.ResultCode != 0){
             /**向缓存中添加用户失败*/
-            result.set(ErrorCode.CacheListNotFound,"用户缓存列表没有建立");
+            result = temp ;
             return result;
         }
 
@@ -157,10 +160,10 @@ public class DBFunc {
 
         if(out_hospital.hospid == null || out_hospital.hospBasic == null){
             /**从缓存中获得医院失败*/
-           /* result.set(ErrorCode.HandleCacheFail,"获得缓存中的医院信息失败");
-            return result ;*/
+            result.set(ErrorCode.HandleCacheFail,"获得缓存中的医院信息失败");
+            return result ;
         }
-        //System.out.println(">>>>>> "+out_hospital.departs.size());
+
         return result;
 
     }
@@ -304,6 +307,7 @@ public class DBFunc {
         if(DBCache.patients == null){
             /**用户缓存列表没有建立*/
             result.set(ErrorCode.CacheListNotFound,"用户缓存列表没有建立");
+            log.error("用户缓存列表没有建立");
             return result;
         }
         if(DBCache.patients.get(idCard) == null){
@@ -355,9 +359,6 @@ public class DBFunc {
     public static void notifyFE(){
 
     }
-
-
-    /*************************内部函数*****************************/
 
 
 

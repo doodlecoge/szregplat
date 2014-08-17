@@ -4,11 +4,37 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-   <!-- <class name="szregplat.model.Hospital" table="hospitalinfo">
+    <class name="szregplat.dbcore.dao.tablemodel.HospTable" table="hospitalinfo">
         <id name="hospid" column="hospid" type="java.lang.String"></id>
         <property name="hospname" column="hospname" type="java.lang.String"></property>
-        <property name="hospBasic"
-    </class>-->
+        <property name="grade" column="grade" type="java.lang.String"></property>
+        <property name="kind" column="kind" type="java.lang.String"></property>
+        <property name="address" column="address" type="java.lang.String"></property>
+        <property name="phone" column="phone" type="java.lang.String"></property>
+        <property name="intro" column="intro" type="java.lang.String"></property>
+        <property name="way" column="way" type="java.lang.String"></property>
+        <property name="hospimg" column="hospimg" type="java.lang.String"></property>
+        <property name="hospwebaddr" column="hospwebaddr" type="java.lang.String"></property>
+        <property name="translateAddr" column="translate_addr" type="java.lang.String"></property>
+        <property name="translateType" column="translate_type" type="java.lang.String"></property>
+        <property name="port" column="port" type="java.lang.Integer"></property>
+        <property name="sortcode" column="sortcode" type="java.lang.Integer"></property>
+        <property name="zone" column="zone" type="java.lang.String"></property>
+        <property name="classes" column="classes" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.dbcore.dao.tablemodel.DepartTable" table="departinfo">
+        <id name="departid" column="departid" type="java.lang.String"></id>
+        <property name="hospname" column="hospname" type="java.lang.String"></property>
+        <property name="departname" column="departname" type="java.lang.String"></property>
+    </class>
+    <class name="szregplat.dbcore.dao.tablemodel.DoctorTable" table="doctorinfo">
+        <id name="doctorid" column="doctorid" type="java.lang.String"></id>
+        <property name="hospname" column="hospname" type="java.lang.String"></property>
+        <property name="departname" column="departname" type="java.lang.String"></property>
+        <property name="doctorname" column="doctorname" type="java.lang.String"></property>
+        <property name="totleScore" column="totle_score" type="java.lang.Integer"></property>
+        <property name="evaluateCount" column="evaluate_count" type="java.lang.Integer"></property>
+    </class>
     <class name="szregplat.model.Black" table="blacklist">
         <id name="idCard" column="idcard" type="java.lang.String"></id>
         <property name="enterReason" column="enter_reason" type="java.lang.String"></property>
@@ -48,22 +74,16 @@
         <property name="pipeBeginTime" column="pipe_begintime" type="java.util.Date"></property>
         <property name="pipeEndTime" column="pipe_endtime" type="java.util.Date"></property>
         <property name="clinicSN" column="clinic_sn" type="java.lang.Integer"></property>
-<!--
         <property name="isFetched" column="isfetched" type="java.lang.Integer"></property>
--->
         <property name="fetchTime" column="fetchtime" type="java.util.Date"></property>
-<!--
         <property name="isPayed" column="ispayed" type="java.lang.Integer"></property>
--->
         <property name="unPayedFee" column="unpayedfee" type="java.lang.Double"></property>
         <property name="payType" column="pay_type" type="java.lang.String"></property>
         <property name="payAccount" column="pay_account" type="java.lang.String"></property>
         <property name="regVia" column="regvia" type="java.lang.String"></property>
-        <!--<property name="vendor" column="vendor" type="java.lang.String"></property>-->
+        <property name="vendor" column="vendor" type="java.lang.String"></property>
         <property name="operator" column="operator" type="java.lang.String"></property>
-<!--
         <property name="isQuit" column="isquit" type="java.lang.Integer"></property>
--->
         <property name="quitTime" column="quit_time" type="java.util.Date"></property>
         <property name="quitVia" column="quit_via" type="java.lang.String"></property>
     </class>
