@@ -301,13 +301,25 @@ public class CacheUpdatingJob extends Thread {
             departs.put(depart.departId, depart);
         }
 
+
+        // add department schedules to corresponding departments
         for (DepartWork work : departWorks) {
             Schedual s = new Schedual();
             s.workDate = parseDate(work.WorkDate);
             s.workStatus = work.WorkStatus;
             s.workType = work.WorkType;
 
+            if (!departs.containsKey(work.DepartId)) {
+                // fixme: report an error
+                log.error("depart not found: " + work.DepartId);
+                continue;
+            }
 
+            Depart depart = departs.get(work.DepartId);
+            if (depart.departScheduals == null) {
+                depart.departScheduals = new ArrayList<Schedual>();
+            }
+            depart.departScheduals.add(s);
         }
 
         Map<String, Doctor> doctors = new HashMap<String, Doctor>();
@@ -337,6 +349,61 @@ public class CacheUpdatingJob extends Thread {
             }
             departDoctors.get(info.DepartId).add(doctor);
         }
+
+
+        // add doctor schedules to corresponding doctors
+        for (DepartWork w : doctorWorks) {
+            DoctorWork work = (DoctorWork) w;
+
+            Schedual s = new Schedual();
+            s.workDate = parseDate(work.WorkDate);
+            s.workStatus = work.WorkStatus;
+            s.workType = work.WorkType;
+            // fixme: is expertFee eq registryfee
+            s.expertFee = Double.valueOf(work.Registryfee);
+
+            if (!doctors.containsKey(work.DoctorId)) {
+                // fixme: report an error
+                log.error("doctor not found: " + work.DepartId);
+                continue;
+            }
+
+            Doctor doctor = doctors.get(work.DoctorId);
+            if (doctor.doctorScheduals == null) {
+                doctor.doctorScheduals = new ArrayList<Schedual>();
+            }
+            doctor.doctorScheduals.add(s);
+        }
+
+        // add doctors to corresponding departments
+        for (String ddk : departDoctors.keySet()) {
+            if (!departs.containsKey(ddk)) {
+                // fixme: report an error
+                log.error("no depart " + ddk + " for doctors");
+                continue;
+            }
+            Depart depart = departs.get(ddk);
+            if (depart.doctors == null) {
+                depart.doctors = new HashMap<String, Doctor>();
+            }
+            List<Doctor> doctorList = departDoctors.get(ddk);
+            for (Doctor doctor : doctorList) {
+                // use doctor name as key
+                depart.doctors.put(doctor.docName, doctor);
+            }
+        }
+
+
+        // ================================================
+        // change key of departments HashMap from depart id
+        // to depart name
+        //
+        HashMap<String, Depart> dptMap = new HashMap<String, Depart>();
+        for (Depart depart : departs.values()) {
+            dptMap.put(depart.departName, depart);
+        }
+
+        return dptMap;
     }
 
 
