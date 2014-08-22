@@ -157,23 +157,31 @@ public class CacheUpdatingJob extends Thread {
     /* worker                                        */
     /*-------------------------------------------------*/
 
-    public void update(String hospitalId) {
+    public void update(String hospitalName) {
+        Hospital hospital = Cache.getInstance().hospitals.get(hospitalName);
+        String hospitalId = hospital.getHospid();
+
+
         // 1. download data to disk
         downloadHisData(hospitalId);
 
         // 2. unmarshal from xml
-        ScheduleCache sc = loadCacheFromFile(hospitalId);
+//        ScheduleCache sc = loadCacheFromFile(hospitalId);
+        Map<String, Depart> departs = loadCacheFromFile(hospitalId);
+
+        hospital.departs = (HashMap) departs;
+
 
         // 3. error check,
         // this step is merged in to setp 2.
 
         // 4. invoke `cmp` stage triggers if any event
-        cmpTrigger(sc);
+//        cmpTrigger(sc);
 
         // 5. replace cache
-        repTrigger(sc);
+//        repTrigger(sc);
 
-        cache.setSchedules(hospitalId, sc);
+//        cache.setSchedules(hospitalId, sc);
     }
 
 
@@ -258,7 +266,7 @@ public class CacheUpdatingJob extends Thread {
     /* unmarshal                                       */
     /*-------------------------------------------------*/
 
-    private ScheduleCache loadCacheFromFile(String hospitalId) {
+    private Map<String, Depart> loadCacheFromFile(String hospitalId) {
         String ts = TimeUtils.getTimeStamp("yyyy-MM-dd");
 
         List<DepartInfo> departInfos = loadHisData(dpt_info, dptInfoTagName, ts, hospitalId, DepartInfo.class, DepartInfoFields);
@@ -266,7 +274,7 @@ public class CacheUpdatingJob extends Thread {
         List<DepartWork> departWorks = loadHisData(dpt_work, dptWorkTagName, ts, hospitalId, DepartWork.class, DepartWorkFields);
         List<DoctorWork> doctorWorks = loadHisData(doc_work, docWorkTagName, ts, hospitalId, DoctorWork.class, DoctorWorkFields);
 
-        return populateCache(hospitalId, departInfos, doctorInfos, departWorks, doctorWorks);
+        return load(hospitalId, departInfos, doctorInfos, departWorks, doctorWorks);
     }
 
     private Map<String, Depart> load(String hospitalId,
